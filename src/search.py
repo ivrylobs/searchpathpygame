@@ -1,7 +1,9 @@
 import queue
 import sys
+import os
 import config
 import heapq
+import pygame
 
 from math import sqrt
 from dataclasses import dataclass
@@ -17,11 +19,12 @@ class Node:
 
 
 class Search:
-    def __init__(self, object, rows, cols, start, goal):
+    def __init__(self, object, rows, cols, start, goal, cellSize):
         self.gridQ = object
         self.goalFound = False
         self.rows = rows
         self.cols = cols
+        self.cellSize = cellSize
         self.start = start
         self.goal = goal
         self.matrix = [[Node() for i in range(rows)] for j in range(cols)]
@@ -92,9 +95,10 @@ class Search:
                     bfsQ.put(v)
                     self.matrix[i][j].g = self.matrix[cur[0]][cur[1]].g + 1
                     self.matrix[i][j].parent = cur
-                    self.gridQ.put((v[0], v[1], config.green))
+                    # self.gridQ.put((v[0], v[1], config.green))
                 else:
-                    self.gridQ.put((v[0], v[1], config.red))
+                    print('Not Found')
+                    # self.gridQ.put((v[0], v[1], config.red))
 
         # Print out path taken to find the goal
         self.backtrack(self.goal)
@@ -116,7 +120,8 @@ class Search:
 
             # Set color to processing for entry node
             self.matrix[i][j].color = "G"
-            self.gridQ.put((i, j, config.green))
+            print('Searched')
+            # self.gridQ.put((i, j, config.green))
 
             # Look at each neighbor of current cell
             for v in self.get_neighbors((i, j), 4):
@@ -154,7 +159,8 @@ class Search:
             closed[(i, j)] = True
 
             # Add this node to be colored in on pygame grid
-            self.gridQ.put((i, j, config.red))
+            print('Failed')
+            # self.gridQ.put((i, j, config.red))
 
             # Exit if goal node found
             if (i, j) == self.goal:
@@ -187,7 +193,8 @@ class Search:
                     self.matrix[row][col].parent = (i, j)
 
                     # Color in cell as being processed
-                    self.gridQ.put((row, col, config.green))
+                    print('Searched')
+                    # self.gridQ.put((row, col, config.green))
 
         # After A* algorithm has completed, backtrack to the start to highlight the path taken
         self.backtrack(self.goal)
@@ -201,9 +208,14 @@ class Search:
         return min(dx, dy) * diag + abs(dx - dy)
 
     def backtrack(self, cur):
-        self.gridQ.put((cur[0], cur[1], config.yellow))
+        # self.gridQ.put((cur[0], cur[1], config.yellow))
+        print(self.start)
+        print(cur)
         while cur != self.start:
             cur = self.matrix[cur[0]][cur[1]].parent
-            self.gridQ.put((cur[0], cur[1], config.blue))
-        self.gridQ.put((cur[0], cur[1], config.yellow))
+            if (cur != self.start):
+                stepPath = pygame.image.load(os.path.join('src/assets', 'step.png'))
+                scaledStepPath = pygame.transform.scale(stepPath, (self.cellSize - 1, self.cellSize - 1))
+                self.gridQ.put((cur[0], cur[1], scaledStepPath))
+        # self.gridQ.put((cur[0], cur[1], config.yellow))
 

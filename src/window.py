@@ -160,9 +160,9 @@ class SGPage(ttk.Frame):
         if size_selection == "Small":
             dimensions = [i for i in range(10)]
         elif size_selection == "Medium":
-            dimensions = [i for i in range(25)]
+            dimensions = [i for i in range(10)]
         elif size_selection == "Large":
-            dimensions = [i for i in range(40)]
+            dimensions = [i for i in range(10)]
 
         self.start_col["values"] = dimensions
         self.start_row["values"] = dimensions

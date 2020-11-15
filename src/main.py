@@ -39,15 +39,15 @@ if game_size == "Small":
     row = (200, 10)
     col = (200, 10)
 elif game_size == "Medium":
-    row = (500, 25)
-    col = (500, 25)
+    row = (500, 10)
+    col = (500, 10)
 elif game_size == "Large":
-    row = (800, 40)
-    col = (800, 40)
+    row = (800, 10)
+    col = (800, 10)
 
 # Main instances of search grid (Grid) and search algorithms(Search)
-myGrid = Grid(row[0], col[0])
-myMatrix = Search(gridQ, row[1], col[1], (s_r, s_c), (g_r, g_c))
+myGrid = Grid(row[0], col[0], int(row[0]/row[1]))
+myMatrix = Search(gridQ, row[1], col[1], (s_r, s_c), (g_r, g_c), int(row[0]/row[1]))
 
 
 # Start the visualisation and initialize the grid
@@ -56,7 +56,7 @@ myGrid.initGrid()
 
 # Add the starting and goal states to the grid
 startImage = pygame.image.load(os.path.join('src/assets', 'tank.png'))
-scaledStartImage = pygame.transform.scale(startImage, (19, 19))
+scaledStartImage = pygame.transform.scale(startImage, (int(row[0]/row[1]) - 1, int(row[0]/row[1]) - 1))
 myGrid.fillImage(s_r, s_c, scaledStartImage)
 # myGrid.fillSquare(s_r, s_c, config.yellow)
 myGrid.fillSquare(g_r, g_c, config.yellow)
@@ -90,11 +90,11 @@ while getWalls:
                 # Color in the cell and set the coordinates in matrix to non-visitable
                 pos_x, pos_y = event.pos
                 pos_x, pos_y = myGrid.getCell(pos_x, pos_y)
-                rec = pygame.Rect(pos_x, pos_y, 20, 20)
+                rec = pygame.Rect(pos_x, pos_y, int(row[0]/row[1]), int(row[0]/row[1]))
                 barbImage = pygame.image.load(os.path.join('src/assets', 'barb.png'))
-                scaledBarbImage = pygame.transform.scale(barbImage, (20, 20))
+                scaledBarbImage = pygame.transform.scale(barbImage, (int(row[0]/row[1]), int(row[0]/row[1])))
                 pygame.Surface.blit(myGrid.screen, scaledBarbImage, rec)
-                myMatrix.setCell(pos_y // 20, pos_x // 20, "B")
+                myMatrix.setCell(pos_y // int(row[0]/row[1]), pos_x // int(row[0]/row[1]), "B")
                 pygame.display.update()
             except:
                 pass
@@ -117,9 +117,8 @@ while 1:
             sys.exit()
 
     if not gridQ.empty():
-        x, y, clr = gridQ.get()
-
-        myGrid.fillSquare(x, y, clr)
+        x, y, img = gridQ.get()
+        myGrid.fillImage(x, y, img)
         pygame.display.update()
 
 
