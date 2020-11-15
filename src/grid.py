@@ -12,7 +12,7 @@ fill = [200, 200, 200]
 
 
 class Grid:
-    def __init__(self, width, height):
+    def __init__(self, width, height, cellSize = 20):
         self.width = width
         self.height = height
 
@@ -42,6 +42,13 @@ class Grid:
         col_actual = col * 20
         rec = pygame.Rect(col_actual, row_actual, 19, 19)
         pygame.draw.rect(self.screen, color, rec)
+        pygame.display.update(rec)
+        
+    def fillImage(self, row, col, image):
+        row_actual = row * 20
+        col_actual = col * 20
+        rec = pygame.Rect(col_actual, row_actual, 19, 19)
+        pygame.Surface.blit(self.screen, image, rec)
         pygame.display.update(rec)
 
     def getCell(self, x, y):

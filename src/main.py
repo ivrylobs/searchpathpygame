@@ -1,4 +1,5 @@
 import sys
+import os
 import pygame
 import time
 import config
@@ -54,7 +55,10 @@ pygame.init()
 myGrid.initGrid()
 
 # Add the starting and goal states to the grid
-myGrid.fillSquare(s_r, s_c, config.yellow)
+startImage = pygame.image.load(os.path.join('src/assets', 'tank.png'))
+scaledStartImage = pygame.transform.scale(startImage, (19, 19))
+myGrid.fillImage(s_r, s_c, scaledStartImage)
+# myGrid.fillSquare(s_r, s_c, config.yellow)
 myGrid.fillSquare(g_r, g_c, config.yellow)
 
 # Local vars for recording mouse input from pygame
@@ -87,7 +91,9 @@ while getWalls:
                 pos_x, pos_y = event.pos
                 pos_x, pos_y = myGrid.getCell(pos_x, pos_y)
                 rec = pygame.Rect(pos_x, pos_y, 20, 20)
-                pygame.draw.rect(myGrid.screen, config.fill, rec)
+                barbImage = pygame.image.load(os.path.join('src/assets', 'barb.png'))
+                scaledBarbImage = pygame.transform.scale(barbImage, (20, 20))
+                pygame.Surface.blit(myGrid.screen, scaledBarbImage, rec)
                 myMatrix.setCell(pos_y // 20, pos_x // 20, "B")
                 pygame.display.update()
             except:
